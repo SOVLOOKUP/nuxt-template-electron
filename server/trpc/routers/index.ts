@@ -2,7 +2,7 @@ import { router } from '../trpc'
 import bilibili from './bilibili'
 
 export const appRouter = router({
-  bilibili,
+  bilibili
 })
 
 // Export type router type signature,

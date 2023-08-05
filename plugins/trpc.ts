@@ -20,23 +20,23 @@ export default defineNuxtPlugin(() => {
             // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
             headers: input instanceof Request ? input.headers : init?.headers!,
             // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
-            body: input instanceof Request ? input.body : init?.body!,
+            body: input instanceof Request ? input.body : init?.body!
           }
 
           const resp = await window.api.trpc(req)
 
           return new Response(resp.body, {
             status: resp.status,
-            headers: resp.headers,
+            headers: resp.headers
           })
-        },
-      }),
-    ],
+        }
+      })
+    ]
   })
 
   return {
     provide: {
-      trpc,
-    },
+      trpc
+    }
   }
 })

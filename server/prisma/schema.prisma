@@ -4,7 +4,7 @@
 generator client {
   provider = "prisma-client-js"
   // Force to have the .prisma folder with pnpm
-  output="../../node_modules/.prisma/client"
+  output   = "../../node_modules/.prisma/client"
 }
 
 datasource db {
@@ -12,8 +12,23 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Post {
-  id          Int     @id @default(autoincrement())
-  title       String
-  description String?
+model Account {
+  id         String   @id @default(uuid())
+  updated_at DateTime @updatedAt
+  created_at DateTime @default(now())
+  name       String?
+  avatar     String?
+  type       String
+  token      String
+
+  record Record[]
+}
+
+model Record {
+  id         String   @id @default(uuid())
+  created_at DateTime @default(now())
+  data       String
+  accountId  String
+
+  Account Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
 }

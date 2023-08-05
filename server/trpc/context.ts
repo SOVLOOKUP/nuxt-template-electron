@@ -5,8 +5,8 @@ import { app } from 'electron'
 import { PrismaClient } from '@prisma/client'
 
 const isProduction = app.isPackaged
-const dbPath
-  = isProduction
+const dbPath =
+  isProduction
     ? `file:${path.join(app.getPath('userData'), 'app.db')}`
     : process.env.DATABASE_URL
 
@@ -14,7 +14,8 @@ const dbPath
  * Creates context for an incoming request
  * @link https://trpc.io/docs/context
  */
-export async function createContext() {
+// eslint-disable-next-line require-await
+export async function createContext () {
   return {
     prisma: new PrismaClient({
       log: isProduction
@@ -22,11 +23,10 @@ export async function createContext() {
         : ['query', 'info', 'error', 'warn'],
       datasources: {
         db: {
-          url: dbPath,
-        },
-      },
-    }),
-
+          url: dbPath
+        }
+      }
+    })
   }
 }
 

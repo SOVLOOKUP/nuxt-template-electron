@@ -1,13 +1,15 @@
 <script setup lang="ts">
 const { $trpc } = useNuxtApp()
 
-const loginCode = useState('code', () => '')
+const accounts = await useAsyncData(() => $trpc.bilibili.list.query())
+
 </script>
 
 <template>
-  <button @click="async () => loginCode = await $trpc.bilibili.login.query()">
-    getIMG
-  </button>
-
-  <img :src="loginCode">
+  <div>
+    <button @click="$trpc.bilibili.login.mutate()">
+      getIMG
+    </button>
+    {{ accounts.data }}
+  </div>
 </template>

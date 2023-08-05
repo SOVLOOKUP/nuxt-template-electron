@@ -3,7 +3,7 @@ import type { HTTPRequest } from '@trpc/server/http'
 import { resolveHTTPResponse } from '@trpc/server/http'
 import type { IpcRequest, IpcResponse } from 'utils/types'
 
-export default async function ipcRequestHandler<TRouter extends AnyRouter>(
+export default async function ipcRequestHandler<TRouter extends AnyRouter> (
   opts: {
     req: IpcRequest
     router: TRouter
@@ -11,8 +11,9 @@ export default async function ipcRequestHandler<TRouter extends AnyRouter>(
     onError?: (o: { error: Error; req: IpcRequest }) => void
     endpoint: string
     createContext?: (params: { req: IpcRequest }) => Promise<inferRouterContext<TRouter>>
-  },
+  }
 ): Promise<IpcResponse> {
+  // eslint-disable-next-line require-await
   const createContext = async () => {
     return opts.createContext?.({ req: opts.req })
   }
@@ -24,7 +25,7 @@ export default async function ipcRequestHandler<TRouter extends AnyRouter>(
     query: url.searchParams,
     method: opts.req.method,
     headers: opts.req.headers,
-    body: opts.req.body,
+    body: opts.req.body
   }
 
   const result = await resolveHTTPResponse({
@@ -33,14 +34,14 @@ export default async function ipcRequestHandler<TRouter extends AnyRouter>(
     path,
     router: opts.router,
     batching: opts.batching,
-    onError(o) {
+    onError (o) {
       opts?.onError?.({ ...o, req: opts.req })
-    },
+    }
   })
 
   return {
     body: result.body,
     headers: result.headers,
-    status: result.status,
+    status: result.status
   }
 }
