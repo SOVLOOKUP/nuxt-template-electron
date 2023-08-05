@@ -48,6 +48,15 @@ function createWindow () {
     win.loadURL(process.env.VITE_DEV_SERVER_URL!)
     win.webContents.openDevTools()
   }
+  // const filter = {
+  //   urls: ['http://*:*/*']
+  // }
+
+  // win.webContents.session.webRequest.onHeadersReceived(filter, (details, callback) => {
+  //   const { responseHeaders } = details
+  //   responseHeaders['Access-Control-Allow-Origin'] = ['*']
+  //   callback({ responseHeaders })
+  // })
 
   // Make all links open with the browser, not with the application
   win.webContents.setWindowOpenHandler(({ url }) => {

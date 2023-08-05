@@ -7,9 +7,18 @@ const accounts = await useAsyncData(() => $trpc.bilibili.list.query())
 
 <template>
   <div>
-    <button @click="$trpc.bilibili.login.mutate()">
+    <n-button @click="$trpc.bilibili.login.mutate()">
       getIMG
-    </button>
-    {{ accounts.data }}
+    </n-button>
+    <n-list hoverable clickable>
+      <n-list-item v-for="item in accounts.data.value" :key="item.id">
+        {{ item }}
+        <n-avatar
+          round
+          size="small"
+          :src="item.avatar??''"
+        />
+      </n-list-item>
+    </n-list>
   </div>
 </template>
