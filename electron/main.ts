@@ -6,6 +6,7 @@ import { BrowserWindow, app, ipcMain, shell } from 'electron'
 
 // Use relative path to avoid issues
 import type { IpcRequest } from 'utils/types'
+import { createContext } from '../server/trpc/context'
 import { appRouter } from '../server/trpc/routers'
 import ipcRequestHandler from './ipcRequestHandler'
 
@@ -89,6 +90,7 @@ app.whenReady().then(() => {
       endpoint: '/trpc',
       req,
       router: appRouter,
+      createContext,
     })
   })
 

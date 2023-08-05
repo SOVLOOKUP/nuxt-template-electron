@@ -1,5 +1,5 @@
 import type { AnyRouter, inferRouterContext } from '@trpc/server'
-import type { HTTPRequest } from '@trpc/server/dist/http/internals/types'
+import type { HTTPRequest } from '@trpc/server/http'
 import { resolveHTTPResponse } from '@trpc/server/http'
 import type { IpcRequest, IpcResponse } from 'utils/types'
 

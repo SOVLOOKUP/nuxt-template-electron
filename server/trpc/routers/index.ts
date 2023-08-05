@@ -1,14 +1,8 @@
-import { z } from 'zod'
-import { procedure, router } from '../trpc'
-import post from './post'
+import { router } from '../trpc'
+import bilibili from './bilibili'
 
 export const appRouter = router({
-  post,
-  greeting: procedure
-    .input(z.object({ name: z.string() }).nullish())
-    .query(({ input }) => {
-      return `hello ${input?.name ?? 'world'}!`
-    }),
+  bilibili,
 })
 
 // Export type router type signature,

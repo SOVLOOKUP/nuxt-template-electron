@@ -23,9 +23,7 @@ export default defineNuxtPlugin(() => {
             body: input instanceof Request ? input.body : init?.body!,
           }
 
-          // console.log("Sending request to Main process", req)
           const resp = await window.api.trpc(req)
-          // console.log("Got response from Main process", resp)
 
           return new Response(resp.body, {
             status: resp.status,
