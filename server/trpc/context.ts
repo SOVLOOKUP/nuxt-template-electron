@@ -3,12 +3,24 @@ import process from 'node:process'
 import type { inferAsyncReturnType } from '@trpc/server'
 import { app } from 'electron'
 import { PrismaClient } from '@prisma/client'
-
+import { consola } from 'consola'
+export { consola }
 const isProduction = app.isPackaged
 const dbPath =
   isProduction
     ? `file:${path.join(app.getPath('userData'), 'app.db')}`
     : process.env.DATABASE_URL
+
+export const prisma = new PrismaClient({
+  log: isProduction
+    ? ['error']
+    : ['info', 'error', 'warn'],
+  datasources: {
+    db: {
+      url: dbPath
+    }
+  }
+})
 
 /**
  * Creates context for an incoming request
@@ -17,16 +29,8 @@ const dbPath =
 // eslint-disable-next-line require-await
 export async function createContext () {
   return {
-    prisma: new PrismaClient({
-      log: isProduction
-        ? ['error']
-        : ['query', 'info', 'error', 'warn'],
-      datasources: {
-        db: {
-          url: dbPath
-        }
-      }
-    })
+    prisma,
+    consola
   }
 }
 

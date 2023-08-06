@@ -18,6 +18,7 @@ model Account {
   created_at DateTime @default(now())
   name       String?
   avatar     String?
+  status     String   @default("Paused") // "Running" | "Paused" | "Error"
   type       String
   token      String
 

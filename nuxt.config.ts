@@ -1,7 +1,9 @@
 export default defineNuxtConfig({
   modules: [
     '@bg-dev/nuxt-naiveui',
-    'nuxt-electron'
+    'nuxt-electron',
+    '@unocss/nuxt',
+    'nuxt-icon'
   ],
   naiveui: {
     colorModePreference: 'system',
