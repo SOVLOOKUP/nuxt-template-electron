@@ -52,7 +52,7 @@ const lg = () =>
     }).catch(reject)
   })
 
-const st = async (token: {
+const start = async (token: {
   SESSDATA: string;
   bili_jct: string;
 }) => {
@@ -62,6 +62,7 @@ const st = async (token: {
   const unReadItems = rp.items.slice(0, unRead.reply)
   return unReadItems
 }
+
 const bilibili = router({
   login: procedure.input(z.string().uuid().optional()).mutation(
     async ({ ctx, input }) => {
@@ -123,22 +124,24 @@ const bilibili = router({
       log.info('运行间隔:', pattern)
 
       const fetchNewRecords = async () => {
-        const newRecord = await st(JSON.parse(account.token))
+        const newRecord = await start(JSON.parse(account.token))
         log.info('新的消息:', newRecord)
         if (newRecord.length > 0) {
-          await ctx.prisma.record.updateMany({
-            data: newRecord.map(i => ({
-              accountId: input.id,
-              data: JSON.stringify(i)
-            }))
-          })
+          for (const record of newRecord) {
+            await ctx.prisma.record.create({
+              data: {
+                accountId: input.id,
+                data: JSON.stringify(record)
+              }
+            })
+          }
         }
       }
       await fetchNewRecords()
 
       Cron(pattern, fetchNewRecords, {
         name: account.id,
-        catch: async (e) => {
+        catch: async (e, job) => {
           log.error('发生错误:', e)
           await ctx.prisma.account.update({
             where: {
@@ -148,10 +151,11 @@ const bilibili = router({
               status: 'Error'
             }
           })
+          job.stop()
         }
       })
 
-      await ctx.prisma.account.update({
+      return await ctx.prisma.account.update({
         where: {
           id: input.id
         },
@@ -163,7 +167,7 @@ const bilibili = router({
   }),
   stop: procedure.input(z.string().uuid()).mutation(async ({ input, ctx }) => {
     scheduledJobs.filter(job => job.name === input).at(0)?.stop()
-    await ctx.prisma.account.update({
+    return await ctx.prisma.account.update({
       where: {
         id: input
       },
@@ -175,7 +179,7 @@ const bilibili = router({
   logout: procedure.input(z.string().uuid()).mutation(
     async ({ ctx, input }) => {
       scheduledJobs.filter(job => job.name === input).at(0)?.stop()
-      await ctx.prisma.account.delete({
+      return await ctx.prisma.account.delete({
         where: {
           id: input
         }
