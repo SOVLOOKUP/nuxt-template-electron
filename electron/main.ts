@@ -39,14 +39,15 @@ function createWindow () {
       // Read more on https://www.electronjs.org/docs/latest/tutorial/context-isolation
       nodeIntegration: false,
       contextIsolation: true
-    }
+    },
+    useContentSize: true
   })
 
   if (app.isPackaged) {
     win.loadFile(path.join(distPath, 'index.html'))
   } else {
     win.loadURL(process.env.VITE_DEV_SERVER_URL!)
-    win.webContents.openDevTools()
+    win.webContents.openDevTools({ mode: 'detach' })
   }
 
   // 禁用跨域
