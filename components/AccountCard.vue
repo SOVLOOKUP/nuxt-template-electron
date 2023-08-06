@@ -18,9 +18,10 @@
         <n-button circle type="success" text @click="toggle(item)">
           <n-icon size="40">
             <Icon
+              v-if="!loading"
               :name="item.status === 'Running' ? 'material-symbols:pause-circle-rounded' : 'material-symbols:play-circle-rounded'"
             />
-            <Icon name="line-md:loading-twotone-loop" />
+            <Icon v-else name="line-md:loading-twotone-loop" />
           </n-icon>
         </n-button>
         <n-button circle type="warning" text @click="logout(item.id)">
@@ -35,7 +36,7 @@
         类型: {{ item.type }}
       </n-tag>
       <n-tag :bordered="false" type="info">
-        活动时间: {{ dayjs(item.updated_at).fromNow() }}
+        活动时间: {{ dayjs(item.updatedAt).fromNow() }}
       </n-tag>
       <n-tag :bordered="false" :type="statusTag[item.status]">
         {{ statusShow[item.status] }}
@@ -47,8 +48,19 @@
 <script setup lang="ts">
 import dayjs from 'dayjs'
 
+interface Item {
+    id: string;
+    type: string;
+    status: string; // 'Running' | 'Paused' | 'Error'
+    updatedAt: string;
+    name: string | null;
+    avatar: string | null;
+    token: string;
+}
+const loading = ref(false)
 const { $trpc } = useNuxtApp()
-const item = defineProps<UnPromisify<ReturnType<typeof $trpc.bilibili.list.query>>[number]>()
+const props = defineProps<{item:Item, refresh:()=>Promise<void>}>()
+const item = ref(({ ...props }).item)
 
 const statusTag: {
   [key: string]: 'success' | 'warning' | 'error'
@@ -67,14 +79,17 @@ const statusShow: {
 }
 
 const toggle = async (account: { status: string; id: string; }) => {
+  loading.value = true
   if (account.status === 'Running') {
-    await $trpc.bilibili.stop.mutate(account.id)
+    item.value = await $trpc.bilibili.stop.mutate(account.id)
   } else {
-    await $trpc.bilibili.start.mutate({ id: account.id })
+    item.value = await $trpc.bilibili.start.mutate({ id: account.id }) as Item
   }
+  loading.value = false
 }
 
 const logout = async (id: string) => {
   await $trpc.bilibili.logout.mutate(id)
+  await props.refresh()
 }
 </script>

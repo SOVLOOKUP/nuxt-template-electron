@@ -1,7 +1,9 @@
 <template>
-  <NuxtLayout>
-    <NuxtPage />
-  </NuxtLayout>
+  <n-message-provider>
+    <NuxtLayout>
+      <NuxtPage />
+    </NuxtLayout>
+  </n-message-provider>
 </template>
 
 <script setup lang="ts">

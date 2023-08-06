@@ -21,6 +21,7 @@ const lg = () =>
   new Promise<{
     name: string;
     avatar: string;
+    userId: string
     token: {
       SESSDATA: string;
       bili_jct: string;
@@ -37,7 +38,9 @@ const lg = () =>
         new BiliCredential(c.cookie.SESSDATA, c.cookie.bili_jct)
       )
       const info = await u.myInfo()
+
       token = {
+        userId: info.mid.toString(),
         name: info.name,
         avatar: info.face,
         token: c.cookie
@@ -84,6 +87,7 @@ const bilibili = router({
         return await ctx.prisma.account.create({
           data: {
             type: 'bilibili',
+            userId: info.userId,
             name: info.name,
             avatar: info.avatar,
             token: JSON.stringify(info.token)
