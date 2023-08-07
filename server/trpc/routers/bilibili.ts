@@ -21,7 +21,7 @@ const lg = () =>
   new Promise<{
     name: string;
     avatar: string;
-    userId: string
+    id: string
     token: {
       SESSDATA: string;
       bili_jct: string;
@@ -40,7 +40,7 @@ const lg = () =>
       const info = await u.myInfo()
 
       token = {
-        userId: info.mid.toString(),
+        id: info.mid.toString(),
         name: info.name,
         avatar: info.face,
         token: c.cookie
@@ -67,7 +67,7 @@ const start = async (token: {
 }
 
 const bilibili = router({
-  login: procedure.input(z.string().uuid().optional()).mutation(
+  login: procedure.input(z.string().optional()).mutation(
     async ({ ctx, input }) => {
       // 登录
       const info = await lg()
@@ -87,7 +87,7 @@ const bilibili = router({
         return await ctx.prisma.account.create({
           data: {
             type: 'bilibili',
-            userId: info.userId,
+            id: info.id,
             name: info.name,
             avatar: info.avatar,
             token: JSON.stringify(info.token)
@@ -100,7 +100,7 @@ const bilibili = router({
     return await ctx.prisma.account.findMany()
   }),
   start: procedure.input(z.object({
-    id: z.string().uuid(),
+    id: z.string(),
     interval: z.object({
       s: z.number(),
       m: z.number(),
@@ -132,10 +132,31 @@ const bilibili = router({
         log.info('新的消息:', newRecord)
         if (newRecord.length > 0) {
           for (const record of newRecord) {
-            await ctx.prisma.record.create({
+            let fans = await ctx.prisma.fans.findUnique({
+              where: {
+                id: record.user.mid.toString()
+              }
+            })
+
+            if (!fans) {
+              fans = await ctx.prisma.fans.create({
+                data: {
+                  id: record.user.mid.toString(),
+                  accountId: account.id,
+                  name: record.user.nickname,
+                  avatar: record.user.avatar
+                }
+              })
+            }
+
+            await ctx.prisma.msg.create({
               data: {
-                accountId: input.id,
-                data: JSON.stringify(record)
+                id: record.id.toString(),
+                content: record.item.source_content,
+                link: record.item.uri,
+                others: JSON.stringify(record),
+                accountId: account.id,
+                fansId: fans.id
               }
             })
           }
@@ -149,7 +170,7 @@ const bilibili = router({
           log.error('发生错误:', e)
           await ctx.prisma.account.update({
             where: {
-              id: input.id
+              id: account.id
             },
             data: {
               status: 'Error'
@@ -161,7 +182,7 @@ const bilibili = router({
 
       return await ctx.prisma.account.update({
         where: {
-          id: input.id
+          id: account.id
         },
         data: {
           status: 'Running'
@@ -169,7 +190,7 @@ const bilibili = router({
       })
     }
   }),
-  stop: procedure.input(z.string().uuid()).mutation(async ({ input, ctx }) => {
+  stop: procedure.input(z.string()).mutation(async ({ input, ctx }) => {
     scheduledJobs.filter(job => job.name === input).at(0)?.stop()
     return await ctx.prisma.account.update({
       where: {
@@ -180,7 +201,7 @@ const bilibili = router({
       }
     })
   }),
-  logout: procedure.input(z.string().uuid()).mutation(
+  logout: procedure.input(z.string()).mutation(
     async ({ ctx, input }) => {
       scheduledJobs.filter(job => job.name === input).at(0)?.stop()
       return await ctx.prisma.account.delete({

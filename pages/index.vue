@@ -8,7 +8,7 @@ const add = async () => {
     await $trpc.bilibili.login.mutate()
     message.success('账号登录成功')
   } catch (error) {
-    if ((error as Error).message.endsWith('(`userId`)')) {
+    if ((error as Error).message.endsWith('(`id`)')) {
       message.warning('账号已登录')
     }
   }
