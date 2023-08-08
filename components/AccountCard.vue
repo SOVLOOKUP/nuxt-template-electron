@@ -15,18 +15,18 @@
     </template>
     <template #header-extra>
       <n-space class="flex">
-        <n-button circle type="success" text @click="toggle(item)">
+        <n-button circle :type="item.status === 'Running' ? 'warning' : 'success'" text @click="toggle(item)">
           <n-icon size="40">
             <Icon
               v-if="!loading"
-              :name="item.status === 'Running' ? 'material-symbols:pause-circle-rounded' : 'material-symbols:play-circle-rounded'"
+              :name="item.status === 'Running' ? 'solar:pause-circle-line-duotone' : 'solar:play-circle-line-duotone'"
             />
             <Icon v-else name="line-md:loading-twotone-loop" />
           </n-icon>
         </n-button>
-        <n-button circle type="warning" text @click="logout(item.id)">
+        <n-button circle text @click="logout(item.id)">
           <n-icon size="40">
-            <Icon name="material-symbols:cancel" />
+            <Icon name="solar:close-circle-line-duotone" />
           </n-icon>
         </n-button>
       </n-space>
@@ -49,17 +49,17 @@
 import dayjs from 'dayjs'
 
 interface Item {
-    id: string;
-    type: string;
-    status: string; // 'Running' | 'Paused' | 'Error'
-    updatedAt: string;
-    name: string | null;
-    avatar: string | null;
-    token: string;
+  id: string;
+  type: string;
+  status: string; // 'Running' | 'Paused' | 'Error'
+  updatedAt: string;
+  name: string | null;
+  avatar: string | null;
+  token: string;
 }
 const loading = ref(false)
 const { $trpc } = useNuxtApp()
-const props = defineProps<{item:Item, refresh:()=>Promise<void>}>()
+const props = defineProps<{ item: Item, refresh:() => Promise<void> }>()
 const item = ref(({ ...props }).item)
 
 const statusTag: {

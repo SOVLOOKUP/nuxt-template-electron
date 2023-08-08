@@ -40,7 +40,8 @@ function createWindow () {
       nodeIntegration: false,
       contextIsolation: true
     },
-    useContentSize: true
+    useContentSize: true,
+    frame: false
   })
 
   if (app.isPackaged) {

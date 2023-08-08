@@ -23,9 +23,9 @@ const refresh = async () => await accounts.execute()
     <n-list>
       <n-list-item>
         <n-card class="flex flex-items-center">
-          <n-button circle type="primary" text @click="add">
+          <n-button circle text @click="add">
             <n-icon size="40">
-              <Icon name="material-symbols:add-circle-rounded" />
+              <Icon name="solar:add-circle-line-duotone" />
             </n-icon>
           </n-button>
         </n-card>

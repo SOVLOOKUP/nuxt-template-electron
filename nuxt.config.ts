@@ -3,13 +3,19 @@ export default defineNuxtConfig({
     '@bg-dev/nuxt-naiveui',
     'nuxt-electron',
     '@unocss/nuxt',
-    'nuxt-icon'
+    'nuxt-icon',
+    [
+      '@pinia/nuxt',
+      {
+        autoImports: [
+          // 自动引入 `defineStore()`
+          'defineStore',
+          // 自动引入 `defineStore()` 并重命名为 `definePiniaStore()`
+          ['defineStore', 'definePiniaStore']
+        ]
+      }
+    ]
   ],
-  naiveui: {
-    colorModePreference: 'system',
-    iconSize: 18,
-    themeConfig: {}
-  },
   build: {
     transpile:
       process.env.NODE_ENV === 'production'
