@@ -1,5 +1,3 @@
-export const openNewTab = (url: string) => globalThis.open(url)
-
 export const useWindowSizeStore = defineStore('counter', () => {
   // 屏幕宽度
   const windowWidth = useState('windowWidth', () => globalThis.innerWidth)
