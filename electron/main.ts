@@ -54,7 +54,7 @@ function createWindow () {
   }
 
   // 传递 window id
-  win.webContents.executeJavaScript(`globalThis.id = ${win.id}`)
+  win.webContents.executeJavaScript(`window.id = ${win.id}`)
 
   // 禁用跨域
   win.webContents.session.webRequest.onBeforeSendHeaders({ urls: ['https://*/*', 'http://*/*'] }, (details, callback) => {
