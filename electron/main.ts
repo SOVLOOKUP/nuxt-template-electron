@@ -2,7 +2,7 @@ import { release } from 'node:os'
 import path from 'node:path'
 import fs from 'node:fs'
 import process from 'node:process'
-import { BrowserWindow, app, ipcMain, shell, Menu } from 'electron'
+import { BrowserWindow, app, ipcMain, shell } from 'electron'
 
 // Use relative path to avoid issues
 import { createContext } from '../server/trpc/context'
