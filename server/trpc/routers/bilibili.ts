@@ -3,13 +3,13 @@ import { z } from 'zod'
 import { BiliCredential, Login, Message, User } from 'bilicaptain'
 import { BrowserWindow } from 'electron'
 import { Cron, scheduledJobs } from 'croner'
-import durationPlg from 'dayjs/plugin/duration'
-import { extend, locale } from 'dayjs'
+// import durationPlg from 'dayjs/plugin/duration'
+// import { extend, locale } from 'dayjs'
 import { procedure, router } from '../trpc'
 import { consola, prisma } from '../context'
 
-extend(durationPlg)
-locale('zh')
+// extend(durationPlg)
+// locale('zh')
 
 // console.log(
 //   dayjs.duration(11115000).seconds(),

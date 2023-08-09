@@ -41,7 +41,9 @@ function createWindow () {
       contextIsolation: true
     },
     useContentSize: true,
-    frame: false
+    frame: false,
+    width: 420,
+    height: 600
   })
 
   if (app.isPackaged) {
@@ -50,6 +52,9 @@ function createWindow () {
     win.loadURL(process.env.VITE_DEV_SERVER_URL!)
     win.webContents.openDevTools({ mode: 'detach' })
   }
+
+  // 传递 window id
+  win.webContents.executeJavaScript(`globalThis.id = ${win.id}`)
 
   // 禁用跨域
   win.webContents.session.webRequest.onBeforeSendHeaders({ urls: ['https://*/*', 'http://*/*'] }, (details, callback) => {
