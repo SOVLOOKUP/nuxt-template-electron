@@ -14,7 +14,7 @@ import { extend, locale } from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import 'dayjs/locale/zh-cn'
 import { darkTheme } from 'naive-ui'
-extend(relativeTime) // +
+extend(relativeTime)
 locale('zh-cn')
 
 const windowSize = useWindowSizeStore()

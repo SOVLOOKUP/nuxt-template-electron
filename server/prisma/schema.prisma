@@ -13,39 +13,5 @@ datasource db {
 }
 
 model Account {
-  id     String  @id
-  name   String?
-  avatar String?
-  status String  @default("Paused") // "Running" | "Paused" | "Error"
-  type   String
-  token  String
-
-  updatedAt DateTime @updatedAt
-  createdAt DateTime @default(now())
-  msg       Msg[]
-  fans      Fans[]
-}
-
-model Fans {
-  id     String  @id
-  name   String?
-  avatar String?
-
-  createdAt DateTime @default(now())
-  accountId String
-  Account   Account  @relation(fields: [accountId], references: [id], onDelete: Cascade)
-  msg       Msg[]
-}
-
-model Msg {
-  id      String  @id
-  content String
-  link    String?
-  others  String
-
-  createdAt DateTime @default(now())
-  accountId String
-  Account   Account  @relation(fields: [accountId], references: [id], onDelete: Cascade)
-  fansId    String
-  Fans      Fans     @relation(fields: [fansId], references: [id])
+  id String @id
 }

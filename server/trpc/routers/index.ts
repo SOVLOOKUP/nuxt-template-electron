@@ -1,9 +1,7 @@
 import { router } from '../trpc'
-import bilibili from './bilibili'
 import ctrl from './ctrl'
 
 export const appRouter = router({
-  bilibili,
   ctrl
 })
 

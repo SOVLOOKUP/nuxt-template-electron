@@ -26,8 +26,6 @@
     "@trpc/client": "^10.37.1",
     "@types/node": "^20.4.8",
     "@unocss/nuxt": "^0.54.1",
-    "bilicaptain": "^0.6.1",
-    "croner": "^6.0.7",
     "dayjs": "^1.11.9",
     "electron": "^25.4.0",
     "electron-builder": "^24.6.3",
