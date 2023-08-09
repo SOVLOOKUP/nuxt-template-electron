@@ -56,6 +56,15 @@ function createWindow () {
   // 传递 window id
   win.webContents.executeJavaScript(`window.id = ${win.id}`)
 
+  // 禁用右键菜单
+  win.hookWindowMessage(278, () => {
+    win?.setEnabled(false)
+    setTimeout(() => {
+      win?.setEnabled(true)
+    }, 100)
+    return true
+  })
+
   // 禁用跨域
   win.webContents.session.webRequest.onBeforeSendHeaders({ urls: ['https://*/*', 'http://*/*'] }, (details, callback) => {
     const url = new URL(details.url)
