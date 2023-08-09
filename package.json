@@ -1,5 +1,5 @@
 {
-  "name": "nuxt-electron-prisma-trpc",
+  "name": "nuxt-electron",
   "version": "0.0.1",
   "private": true,
   "main": "dist-electron/main.js",

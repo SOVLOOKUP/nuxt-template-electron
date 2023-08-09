@@ -2,7 +2,7 @@ import { release } from 'node:os'
 import path from 'node:path'
 import fs from 'node:fs'
 import process from 'node:process'
-import { BrowserWindow, app, ipcMain, shell } from 'electron'
+import { BrowserWindow, app, ipcMain, shell, Menu } from 'electron'
 
 // Use relative path to avoid issues
 import { createContext } from '../server/trpc/context'
@@ -55,6 +55,15 @@ function createWindow () {
 
   // 传递 window id
   win.webContents.executeJavaScript(`window.id = ${win.id}`)
+
+  // 禁用右键菜单
+  win.hookWindowMessage(278, () => {
+    win?.setEnabled(false)
+    setTimeout(() => {
+      win?.setEnabled(true)
+    }, 100)
+    return true
+  })
 
   // 禁用跨域
   win.webContents.session.webRequest.onBeforeSendHeaders({ urls: ['https://*/*', 'http://*/*'] }, (details, callback) => {
