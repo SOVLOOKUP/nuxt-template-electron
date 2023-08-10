@@ -47,7 +47,7 @@ async function createWindow () {
   })
 
   // 传递 window id
-  win.once('ready-to-show', () => win?.webContents.executeJavaScript(`window.id = ${win.webContents.id}`))
+  win.webContents.executeJavaScript(`window.id = ${win.id}`)
 
   if (app.isPackaged) {
     await win.loadFile(path.join(distPath, 'index.html'))
@@ -100,13 +100,14 @@ if (app.isPackaged) {
   if (!hasDb) { fs.copyFileSync(path.join(process.resourcesPath, 'server/prisma/app.db'), path.join(app.getPath('userData'), 'app.db')) }
 }
 
-ipcMain.handle('trpc', (_event, req: IpcRequest) => {
-  return ipcRequestHandler({
-    endpoint: '/trpc',
-    req,
-    router: appRouter,
-    createContext
+app.whenReady().then(async () => {
+  ipcMain.handle('trpc', (_event, req: IpcRequest) => {
+    return ipcRequestHandler({
+      endpoint: '/trpc',
+      req,
+      router: appRouter,
+      createContext
+    })
   })
+  await createWindow()
 })
-
-app.whenReady().then(createWindow)
