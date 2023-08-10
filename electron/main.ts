@@ -30,7 +30,7 @@ let win: BrowserWindow | null = null
 const preload = path.join(__dirname, 'preload.js')
 const distPath = path.join(__dirname, '../.output/public')
 
-function createWindow () {
+async function createWindow () {
   win = new BrowserWindow({
     webPreferences: {
       preload,
@@ -47,12 +47,12 @@ function createWindow () {
   })
 
   // 传递 window id
-  win.webContents.executeJavaScript(`window.id = ${win.id}`)
+  win.once('ready-to-show', () => win?.webContents.executeJavaScript(`window.id = ${win.webContents.id}`))
 
   if (app.isPackaged) {
-    win.loadFile(path.join(distPath, 'index.html'))
+    await win.loadFile(path.join(distPath, 'index.html'))
   } else {
-    win.loadURL(process.env.VITE_DEV_SERVER_URL!)
+    await win.loadURL(process.env.VITE_DEV_SERVER_URL!)
     win.webContents.openDevTools({ mode: 'detach' })
   }
 
@@ -95,19 +95,16 @@ app.on('activate', () => {
   if (allWindows.length) { allWindows[0].focus() } else { createWindow() }
 })
 
-app.whenReady().then(() => {
-  ipcMain.handle('trpc', (_event, req: IpcRequest) => {
-    return ipcRequestHandler({
-      endpoint: '/trpc',
-      req,
-      router: appRouter,
-      createContext
-    })
-  })
-  createWindow()
-})
-
 if (app.isPackaged) {
   const hasDb = fs.existsSync(`${path.join(app.getPath('userData'), 'app.db')}`)
   if (!hasDb) { fs.copyFileSync(path.join(process.resourcesPath, 'server/prisma/app.db'), path.join(app.getPath('userData'), 'app.db')) }
 }
+
+ipcMain.handle('trpc', (_event, req: IpcRequest) => ipcRequestHandler({
+  endpoint: '/trpc',
+  req,
+  router: appRouter,
+  createContext
+}))
+
+app.whenReady().then(createWindow)
