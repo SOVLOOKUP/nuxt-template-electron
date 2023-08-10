@@ -8,7 +8,7 @@
       </n-icon>
     </template>
     <template #title>
-      萝卜互动
+      Template
     </template>
 
     <template #extra>
