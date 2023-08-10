@@ -100,11 +100,13 @@ if (app.isPackaged) {
   if (!hasDb) { fs.copyFileSync(path.join(process.resourcesPath, 'server/prisma/app.db'), path.join(app.getPath('userData'), 'app.db')) }
 }
 
-ipcMain.handle('trpc', (_event, req: IpcRequest) => ipcRequestHandler({
-  endpoint: '/trpc',
-  req,
-  router: appRouter,
-  createContext
-}))
+ipcMain.handle('trpc', (_event, req: IpcRequest) => {
+  return ipcRequestHandler({
+    endpoint: '/trpc',
+    req,
+    router: appRouter,
+    createContext
+  })
+})
 
 app.whenReady().then(createWindow)
