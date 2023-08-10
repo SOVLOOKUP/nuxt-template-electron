@@ -59,9 +59,7 @@ function createWindow () {
   // 禁用右键菜单
   win.hookWindowMessage(278, () => {
     win?.setEnabled(false)
-    setTimeout(() => {
-      win?.setEnabled(true)
-    }, 100)
+    win?.setEnabled(true)
     return true
   })
 
