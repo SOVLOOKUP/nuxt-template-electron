@@ -8,7 +8,6 @@ declare global {
       serialport: {
         list: () => Promise<SerialPort.PortInfo[]>
       }
-    },
-    id: number
+    }
   }
 }

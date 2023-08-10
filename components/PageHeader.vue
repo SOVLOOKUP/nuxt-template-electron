@@ -8,22 +8,22 @@
       </n-icon>
     </template>
     <template #title>
-      Template
+      萝卜互动
     </template>
 
     <template #extra>
       <n-space style="-webkit-app-region: no-drag;">
-        <n-button circle text @click="$trpc.ctrl.min.mutate(winId)">
+        <n-button circle text @click="$trpc.ctrl.min.mutate()">
           <n-icon size="30">
             <Icon name="solar:minus-circle-line-duotone" />
           </n-icon>
         </n-button>
-        <n-button circle text @click="$trpc.ctrl.max.mutate(winId)">
+        <n-button circle text @click="$trpc.ctrl.max.mutate()">
           <n-icon size="30">
             <Icon name="solar:quit-full-screen-circle-line-duotone" />
           </n-icon>
         </n-button>
-        <n-button circle text @click="$trpc.ctrl.close.mutate(winId)">
+        <n-button circle text @click="$trpc.ctrl.close.mutate()">
           <n-icon size="30">
             <Icon name="solar:close-circle-line-duotone" />
           </n-icon>
@@ -34,5 +34,4 @@
 </template>
 <script setup lang="ts">
 const { $trpc } = useNuxtApp()
-const winId = window.id
 </script>

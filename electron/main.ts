@@ -46,9 +46,6 @@ async function createWindow () {
     height: 600
   })
 
-  // 传递 window id
-  win.webContents.executeJavaScript(`window.id = ${win.id}`)
-
   if (app.isPackaged) {
     await win.loadFile(path.join(distPath, 'index.html'))
   } else {
