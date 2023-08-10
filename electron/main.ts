@@ -106,12 +106,19 @@ app.whenReady().then(() => {
       createContext
     })
   })
-
-  if (app.isPackaged) {
-    const hasDb = fs.existsSync(`${path.join(app.getPath('userData'), 'app.db')}`)
-    // TODO: Run new migrations at startup
-    if (!hasDb) { fs.copyFileSync(path.join(process.resourcesPath, 'server/prisma/app.db'), path.join(app.getPath('userData'), 'app.db')) }
-  }
-
   createWindow()
 })
+
+if (app.isPackaged) {
+  const hasDb = fs.existsSync(`${path.join(app.getPath('userData'), 'app.db')}`)
+
+  if (!hasDb) {
+    fs.copyFileSync(path.join(process.resourcesPath, 'server/prisma/app.db'), path.join(app.getPath('userData'), 'app.db'))
+  } else {
+    // const nowDb = fs.statSync(path.join(app.getPath('userData'), 'app.db'))
+    // const initDb = fs.statSync(path.join(process.resourcesPath, 'server/prisma/app.db'))
+    // if (nowDb.mtime > initDb.mtime) {
+    //   fs.copyFileSync(path.join(process.resourcesPath, 'server/prisma/app.db'), path.join(app.getPath('userData'), 'app.db'))
+    // }
+  }
+}
