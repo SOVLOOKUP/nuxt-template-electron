@@ -46,15 +46,15 @@ function createWindow () {
     height: 600
   })
 
+  // 传递 window id
+  win.webContents.executeJavaScript(`window.id = ${win.id}`)
+
   if (app.isPackaged) {
     win.loadFile(path.join(distPath, 'index.html'))
   } else {
     win.loadURL(process.env.VITE_DEV_SERVER_URL!)
     win.webContents.openDevTools({ mode: 'detach' })
   }
-
-  // 传递 window id
-  win.webContents.executeJavaScript(`window.id = ${win.id}`)
 
   // 禁用右键菜单
   win.hookWindowMessage(278, () => {
